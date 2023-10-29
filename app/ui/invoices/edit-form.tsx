@@ -59,7 +59,6 @@ export default function EditInvoiceForm({
 								name="amount"
 								type="number"
 								defaultValue={invoice.amount}
-								step="any"
 								placeholder="Enter USD amount"
 								className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
 							/>
