@@ -24,7 +24,11 @@ export default async function Page({ params }: { params: { id: string } }) {
 					},
 				]}
 			/>
-			<Form invoice={invoice} customers={customers} />
+			<Form
+				invoiceId={id === invoice.id ? invoice.id : ''}
+				invoice={invoice}
+				customers={customers}
+			/>
 		</main>
 	)
 }

@@ -12,17 +12,20 @@ import { Button } from '../button'
 import { updateInvoice } from '@/app/lib/actions'
 
 export default function EditInvoiceForm({
+	invoiceId,
 	invoice,
 	customers,
 }: {
+	invoiceId: string
 	invoice: InvoiceForm
 	customers: CustomerField[]
 }) {
+	// Use bind to avoid hidden input on the client
+	const updateInovoiceId = updateInvoice.bind(null, invoiceId)
+
 	return (
-		<form action={updateInvoice}>
+		<form action={updateInovoiceId}>
 			<div className="rounded-md bg-gray-50 p-4 md:p-6">
-				{/* Invoice ID */}
-				<input type="hidden" name="id" value={invoice.id} />
 				{/* Customer Name */}
 				<div className="mb-4">
 					<label htmlFor="customer" className="mb-2 block text-sm font-medium">
