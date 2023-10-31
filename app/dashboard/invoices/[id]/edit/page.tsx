@@ -5,8 +5,10 @@ import { notFound } from 'next/navigation'
 
 export default async function Page({ params }: { params: { id: string } }) {
 	const id = params.id
-	const invoice = await fetchInvoiceById(id)
-	const customers = await fetchCustomers()
+	const [invoice, customers] = await Promise.all([
+		fetchInvoiceById(id),
+		fetchCustomers(),
+	])
 
 	if (!invoice) {
 		notFound()
@@ -19,16 +21,12 @@ export default async function Page({ params }: { params: { id: string } }) {
 					{ label: 'Invoices', href: '/dashboard/invoices' },
 					{
 						label: 'Edit invoice',
-						href: `/dashboard/inovices/${id}/edit`,
+						href: `/dashboard/invoices/${id}/edit`,
 						active: true,
 					},
 				]}
 			/>
-			<Form
-				invoiceId={id === invoice.id ? invoice.id : ''}
-				invoice={invoice}
-				customers={customers}
-			/>
+			<Form invoice={invoice} customers={customers} />
 		</main>
 	)
 }

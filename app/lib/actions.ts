@@ -20,7 +20,6 @@ const FormSchema = z.object({
 })
 const CreateInvoice = FormSchema.omit({ id: true, date: true })
 const UpdateInvoice = FormSchema.omit({ date: true })
-const DeleteInvoice = FormSchema.pick({ id: true })
 
 // This is temporary until @types/react-dom is updated
 export type State = {
@@ -71,13 +70,25 @@ export async function createInvoice(prevState: State, formData: FormData) {
 	redirect('/dashboard/invoices')
 }
 
-export async function updateInvoice(id: string, formData: FormData) {
-	const { customerId, amount, status } = UpdateInvoice.parse({
-		id: id,
+export async function updateInvoice(
+	id: string,
+	prevState: State,
+	formData: FormData
+) {
+	const validatedFields = UpdateInvoice.safeParse({
 		customerId: formData.get('customerId'),
 		amount: formData.get('amount'),
 		status: formData.get('status'),
 	})
+
+	if (!validatedFields.success) {
+		return {
+			errors: validatedFields.error.flatten().fieldErrors,
+			message: 'Missing fields. Failed to update invoice.',
+		}
+	}
+
+	const { customerId, amount, status } = validatedFields.data
 	const amountInCents = amount * 100
 
 	try {
@@ -96,11 +107,8 @@ export async function updateInvoice(id: string, formData: FormData) {
 	redirect('/dashboard/invoices')
 }
 
-export async function deleteInvoice(formData: FormData) {
+export async function deleteInvoice(id: string) {
 	// throw new Error('Failed to delete invoice') example of error.tsx on invoices segment
-	const { id } = DeleteInvoice.parse({
-		id: formData.get('id'),
-	})
 
 	try {
 		await sql`DELETE FROM invoices WHERE id = ${id}`

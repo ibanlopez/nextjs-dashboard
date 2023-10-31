@@ -86,10 +86,10 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
 				</div>
 
 				{/* Invoice Status */}
-				<div>
-					<label htmlFor="status" className="mb-2 block text-sm font-medium">
+				<fieldset>
+					<legend className="mb-2 block text-sm font-medium">
 						Set the invoice status
-					</label>
+					</legend>
 					<div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
 						<div className="flex gap-4">
 							<div className="flex items-center">
@@ -99,7 +99,6 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
 									type="radio"
 									value="pending"
 									className="h-4 w-4 border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600"
-									aria-labelledby="status-error"
 								/>
 								<label
 									htmlFor="pending"
@@ -114,7 +113,6 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
 									type="radio"
 									value="paid"
 									className="h-4 w-4 border-gray-300 bg-gray-100 text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600"
-									aria-labelledby="status-error"
 								/>
 								<label
 									htmlFor="paid"
@@ -126,18 +124,20 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
 					</div>
 					{state.errors?.status ? (
 						<div
-							id="status-paid"
+							aria-describedby="status-error"
 							aria-live="polite"
 							className="mt-2 test-sm text-red-500">
-							<p>{state.errors.status}</p>
+							{state.errors.status.map((error: string) => (
+								<p key={error}>{error}</p>
+							))}
 						</div>
 					) : null}
-					{state.errors && (
-						<div aria-live="polite" className="mt-2 test-sm text-red-500">
-							<p>{'Missing fields. Failed to create invoice.'}</p>
-						</div>
-					)}
-				</div>
+				</fieldset>
+				{state.message ? (
+					<div aria-live="polite" className="my-2 text-sm text-red-500">
+						<p>{state.message}</p>
+					</div>
+				) : null}
 			</div>
 			<div className="mt-6 flex justify-end gap-4">
 				<Link
